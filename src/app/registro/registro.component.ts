@@ -23,8 +23,10 @@ export class RegistroComponent implements OnInit {
   
 
   agregarJugador() {
-    if (this.nuevoJugador.invalid)
+    if (this.nuevoJugador.invalid) {
+      this.mensajeValidacion = "tiene que escribir un nombre";
       return;
+    }
     var anade = this._juegoService.addJugador(this.nuevoJugador.value);
     if(!anade)
     {
@@ -39,7 +41,7 @@ export class RegistroComponent implements OnInit {
 
 
   guardar() {
-
+    return false;
   }
 
   

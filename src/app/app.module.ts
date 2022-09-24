@@ -1,15 +1,27 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { JuegoComponent } from './juego/juego.component';
 import { RegistroComponent } from './registro/registro.component';
 import { ListaJugadoresComponent } from './lista-jugadores/lista-jugadores.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { JuegoService } from './services/juego-service';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
-
+const routes: Routes = [
+  {
+    path: 'juego', component: JuegoComponent
+  }, 
+  {
+    path: 'registro', component: RegistroComponent
+  },
+  {
+    path: 'jugadores', component: ListaJugadoresComponent
+  },
+  {
+    path: '**', component: RegistroComponent
+  }
+];
 
 
 @NgModule({
@@ -21,10 +33,9 @@ import { JuegoService } from './services/juego-service';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes)
   ],
-  providers: [ JuegoService ],
   bootstrap: [AppComponent]
 })
 

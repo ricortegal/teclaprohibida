@@ -1,1 +1,30 @@
-<p>juego works!</p>
+<div class="container">
+    <p> ES EL TURNO DE : <b>{{jugadorActual.nombre}}</b>, próximo jugador: {{proximoJugador.nombre}}</p>
+    <div class="row row-cols-4">
+        <div class="col mb-4" *ngFor="let jugador of jugadores">
+            <div class="card" [ngClass]="{'border-primary' : jugador.nombre == jugadorActual.nombre}">
+                <div class="card-body">
+                    <h4 class="card-title text-center" [ngStyle]="{'color' : jugador.nombre == jugadorActual.nombre ? 'green' : '#AAA'}">
+                        {{jugador.nombre}}
+                    </h4>
+                    <div class="card-text" [ngStyle]="{'color' : jugador.nombre == jugadorActual.nombre ? 'green' : '#AAA'}">
+                        <p>puntuación: {{jugador.puntuacion}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h3>{{jugadorActual.nombre}}, pulsa una tecla</h3> 
+        </div>
+    </div>
+    <div class="row" [ngStyle]="{'visibility' : muestraTecla ? 'visible' : 'hidden'}">
+        <div class="col">
+            <p style="font-size: 120px">{{tecla}}</p>
+        </div>
+        <div class="col">
+            <p>{{segundos}}</p>
+        </div>
+    </div>
+</div>

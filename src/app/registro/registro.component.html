@@ -1,35 +1,45 @@
-<form (ngSubmit)="guardar()" class="needs-validation">
+<div class="container">
+    <form (ngSubmit)="guardar()" class="needs-validation" (keydown.enter)="$event.preventDefault()">
 
-    <!-- Agregar jugador-->
-    <div class="row ">
-        <div class="col col-sm-4">
-            <div class="input-group has-validation mb-2">
+        <!-- Agregar jugador-->
+        <div class="row">
+    
+            <div class="col col-sm-6 input-group">
                 <input class="form-control" [formControl]="nuevoJugador" placeholder="Agregar Jugador"
                     (keyup.enter)="agregarJugador()">
-    
                 <button class="btn btn-outline-primary" type="button" (click)="agregarJugador()">
                     Agregar
                 </button>
-                <div class="invalid-feedback">
-                    asdasdasdasdasd
+            </div>
+            <div class="text-danger mb-2" [ngStyle]="{'visibility' : mensajeValidacion != '' ? 'visible' : 'hidden'}">
+                &nbsp; {{mensajeValidacion}}
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col mb-4">
+                <button class="btn btn-primary"
+                    [ngClass]="{'disabled' : !puedoIniciar}" [routerLink]="['/juego']">Comenzar una partida</button>
+            </div>
+        </div>
+
+
+        <!-- Lista de jugadores -->
+        <div class="row row-cols-4">
+            <div class="col mb-4" *ngFor="let jugador of jugadores">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">
+                            {{jugador}}
+                        </h4>
+                        <div class="card-text">
+                            <button class="btn btn-danger float-end" type="button" (click)="borrar(jugador)">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Lista de jugadores -->
-
-        <ul class="row" *ngFor="let jugador of jugadores">
-            <li class="col col-sm-6 mb-1">
-                {{jugador}}
-                <button class="btn btn-outline-danger" type="button" (click)="borrar(jugador)">
-                    Eliminar
-                </button>
-            </li>
-        </ul>
-
-
-    <div class="row">
-        <button class="col offset-sm-2 col-sm-2 btn btn-primary mb-2">Comenzar una partida</button>
-    </div>
+ 
 </form>
