@@ -15,9 +15,11 @@ export class JuegoComponent implements AfterViewInit {
   private _jugador : Jugador;
   private _proximoJugador : Jugador;  
   private _muestraTecla : boolean;
-  private _muestraSegundos : boolean;
   private _segundos : number;
   private _tecla : string;
+  private _otraPartida : boolean;
+  private _muestraFinPartida : boolean;
+  private _encontradaTeclaProhibida: boolean;
   private _temporizadorObservable$ : Observable<number>;
   private _temporizadorObservador : Observer<number>;
   private _suscriptionTemporizador? : Subscription;
@@ -30,9 +32,11 @@ export class JuegoComponent implements AfterViewInit {
     this._jugador = this.juegoService.turno();
     this._proximoJugador = this.juegoService.proximoJugador;
     this._muestraTecla = false;
-    this._muestraSegundos = false;
     this._tecla = '';
-    this._segundos = 0;
+    this._segundos = 1;
+    this._muestraFinPartida = false;
+    this._otraPartida = false;
+    this._encontradaTeclaProhibida = false;
     this._temporizadorObservable$ = interval(1000);
     this._temporizadorObservador = {
         next: value => {
@@ -49,7 +53,7 @@ export class JuegoComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     document.addEventListener("keypress", (ev:KeyboardEvent) => {
       if(this.juegoService.jugando)
-        this.teclaPulsada(ev);
+        this.pulsarTecla(ev);
     })
     this.iniciaJuego();
   }
@@ -82,39 +86,72 @@ export class JuegoComponent implements AfterViewInit {
   }
 
 
-  teclaPulsada(key: KeyboardEvent) {
-    if(!this.juegoService.jugando) {
-      console.log("no se ha iniciado el juego o se ha terminado");
-      return;
-    }
-    if(this._muestraTecla) {
-      console.log("juego detenido, mostrando teclas");
-      return;
-    }
-    if(this.juegoService.intento(key)) {
-      console.log("fin del juego")
-    }
-    else {
-      this._muestraTecla = true;
-      this._tecla = key.key;
-      this._suscriptionTemporizador =  this._temporizadorObservable$.subscribe(this._temporizadorObservador);
-    }
-  
+  get otraPartida() : boolean {
+    return this._otraPartida;
   }
 
 
-  private finalizaVisibilidadTecla() {
+  pulsarTecla(key: KeyboardEvent) {
+    if (!this.juegoService.jugando) {
+      console.log("no se ha iniciado el juego o se ha terminado");
+      return;
+    }
+    if (this._muestraTecla) {
+      console.log("juego detenido, mostrando teclas");
+      return;
+    }
+    this._encontradaTeclaProhibida = this.juegoService.intento(key);
+    this._muestraTecla = true;
+    this._tecla = key.key;
+    this._suscriptionTemporizador = this._temporizadorObservable$.subscribe(this._temporizadorObservador);
+
+  }
+
+
+  iniciaPartida() : void {
+    this._document.body.style.backgroundColor = "#FFF";
+    this._encontradaTeclaProhibida = false;
+    this._muestraFinPartida = false;
+    this._otraPartida = false;
+    this.juegoService.iniciaJuego();
+    this._jugador = this.juegoService.turno();
+    this._proximoJugador = this.juegoService.proximoJugador;
+  }
+
+
+  private tratarTeclaProhibida() {
+    this._document.body.style.backgroundColor = "#F00";
+    this.finalizaPartida();
+  }
+
+
+  private finalizaVisibilidadTecla() : void {
     this._muestraTecla = false;
-    this._segundos = 0;
+    this._segundos = 1;
     this._jugador = this.juegoService.turno();
     this._proximoJugador = this.juegoService.proximoJugador;
     console.log(this.jugadorActual);
     console.log(this.proximoJugador);
     console.log(this.juegoService.teclasProhibidas);
+    if(this._encontradaTeclaProhibida)
+      this.tratarTeclaProhibida();
     if(this._suscriptionTemporizador)
       this._suscriptionTemporizador.unsubscribe();
   }
 
+
+  private finalizaPartida() : void {
+    if(this.juegoService.jugando) {
+      throw new Error("No se puede finalizar la partida no se ha resuelto la tecla prohibida");
+    }
+    this._muestraFinPartida = true;
+    this._otraPartida = true;
+    this._jugador.puntuacion = 0;
+  }
+
+  get muestraFinPartida() {
+    return this._muestraFinPartida;
+  }
 
   get muestraTecla() : boolean {
     return this._muestraTecla;
@@ -130,6 +167,11 @@ export class JuegoComponent implements AfterViewInit {
     return this._segundos;
   }
   
+
+  get teclasProhibidas() : string {
+    let teclas = this.juegoService.teclasProhibidas.map(tp => tp.key);
+    return teclas.join(", ");
+  }
 
 
 }

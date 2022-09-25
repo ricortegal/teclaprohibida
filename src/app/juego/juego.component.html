@@ -14,14 +14,29 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" [ngStyle]="{'display' : !muestraFinPartida ? 'block' : 'none'}">
         <div class="col">
             <h3>{{jugadorActual.nombre}}, pulsa una tecla</h3> 
         </div>
     </div>
+    <div>
+        <div class="row" [ngStyle]="{'display' : muestraFinPartida ? 'block' : 'none'}">
+            <div class="col">
+                <h3>{{jugadorActual.nombre}} has pulsado la tecla {{tecla}} prohibida</h3>
+                <p>TECLAS PROHIBIDAS: {{teclasProhibidas}}</p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="row" [ngStyle]="{'display' : otraPartida ? 'block' : 'none'}">
+            <div class="col">
+                <button class="btn btn-primary" (click)="iniciaPartida()">Otra Partida</button>
+            </div>
+        </div>
+    </div>
     <div class="row" [ngStyle]="{'visibility' : muestraTecla ? 'visible' : 'hidden'}">
         <div class="col">
-            <p style="font-size: 120px">{{tecla}}</p>
+            <b><p style="font-size: 140px">{{tecla}}</p></b>
         </div>
         <div class="col">
             <p>{{segundos}}</p>

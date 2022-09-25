@@ -51,12 +51,13 @@ export class JuegoService {
   }
 
 
-  get proximoJugador() : Jugador {
-    if(this._juegoContext.turnoNumero + 1 < this._juegoContext.jugadores.length) {
-      return this._juegoContext.jugadores[this._juegoContext.turnoNumero + 1];
-    } else {
-      return this._juegoContext.jugadores[0];
-    }
+  finalizaJuego() {
+    this._juegoContext.ronda = 0;
+  }
+
+
+  canInit() : boolean {
+    return this._juegoContext.jugadores.length > 1
   }
 
 
@@ -87,11 +88,6 @@ export class JuegoService {
   }
 
 
-  canInit() : boolean {
-    return this._juegoContext.jugadores.length > 1
-  }
-
-
   intento(tecla: KeyboardEvent) : boolean{
     if(this._juegoContext.turnoJugador == null)
       throw new Error("turno no iniciado");
@@ -102,8 +98,17 @@ export class JuegoService {
       this._juegoContext.turnoNumero ++;
       return false;
     } else {
-      this._juegoContext.ronda = 0;
+      this.finalizaJuego()
       return true;
+    }
+  }
+
+
+  get proximoJugador() : Jugador {
+    if(this._juegoContext.turnoNumero + 1 < this._juegoContext.jugadores.length) {
+      return this._juegoContext.jugadores[this._juegoContext.turnoNumero + 1];
+    } else {
+      return this._juegoContext.jugadores[0];
     }
   }
 
