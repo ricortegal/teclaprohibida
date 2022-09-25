@@ -120,7 +120,7 @@ export class JuegoComponent implements AfterViewInit {
 
 
   private tratarTeclaProhibida() {
-    this._document.body.style.backgroundColor = "#F00";
+    this._document.body.style.backgroundColor = "#A00";
     this.finalizaPartida();
   }
 
@@ -141,12 +141,10 @@ export class JuegoComponent implements AfterViewInit {
 
 
   private finalizaPartida() : void {
-    if(this.juegoService.jugando) {
-      throw new Error("No se puede finalizar la partida no se ha resuelto la tecla prohibida");
-    }
+    this._jugador.puntuacion = 0;
+    this.juegoService.finalizaJuego();
     this._muestraFinPartida = true;
     this._otraPartida = true;
-    this._jugador.puntuacion = 0;
   }
 
   get muestraFinPartida() {

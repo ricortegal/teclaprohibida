@@ -29,7 +29,8 @@ export class JuegoService {
     this._juegoContext.jugadores.push(
      {
        nombre: nombre,
-       puntuacion:0
+       puntuacion:0,
+       puntuacionTotal:0
      });
      return true;
   }
@@ -53,6 +54,10 @@ export class JuegoService {
 
   finalizaJuego() {
     this._juegoContext.ronda = 0;
+    this._juegoContext.jugadores.forEach( j => {
+      j.puntuacionTotal += j.puntuacion
+      j.puntuacion = 0; 
+    })
   }
 
 
@@ -98,7 +103,7 @@ export class JuegoService {
       this._juegoContext.turnoNumero ++;
       return false;
     } else {
-      this.finalizaJuego()
+      //this.finalizaJuego()
       return true;
     }
   }

@@ -1,4 +1,5 @@
 export interface Jugador {
     nombre : string;
-    puntuacion: number
+    puntuacion: number;
+    puntuacionTotal: number
 }
